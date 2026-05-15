@@ -1,0 +1,44 @@
+name: Sync ACL4SSR Rules
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 04:15 Asia/Shanghai. GitHub schedules use UTC.
+    - cron: "15 20 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-acl4ssr-rules
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync mirrored ACL4SSR files
+        run: bash scripts/sync-acl4ssr.sh
+
+      - name: Commit and push changes
+        run: |
+          set -euo pipefail
+
+          git add ACL4SSR
+
+          if git diff --cached --quiet; then
+            echo "No ACL4SSR rule changes."
+            exit 0
+          fi
+
+          upstream_sha="$(git ls-remote https://github.com/ACL4SSR/ACL4SSR.git refs/heads/master | awk '{print $1}')"
+          short_sha="${upstream_sha:0:7}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Sync ACL4SSR mirrored rules" -m "Upstream ACL4SSR/ACL4SSR@${short_sha}"
+          git push

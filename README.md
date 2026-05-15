@@ -7,6 +7,10 @@ The top-level files are local overlays. The `ACL4SSR/` directory mirrors the
 upstream ACL4SSR rule files currently used by the local Surge profiles, so Mac
 and iOS can load rule content from this repository.
 
+`scripts/sync-acl4ssr.sh` mirrors the upstream ACL4SSR files listed in the
+current Surge profiles. GitHub Actions runs it every day at 04:15 Asia/Shanghai
+and commits changes only when the mirrored files differ from upstream.
+
 Overlay usage:
 
 ```ini
