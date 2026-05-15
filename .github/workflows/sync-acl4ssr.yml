@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Sync mirrored ACL4SSR files
         run: bash scripts/sync-acl4ssr.sh
