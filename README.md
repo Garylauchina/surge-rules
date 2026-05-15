@@ -1,14 +1,20 @@
 # Surge Rules
 
-Public-safe overlay rule sets for Surge. Keep proxy subscriptions, API keys,
-controller addresses, LAN addresses, and device information out of this repo.
+Public-safe rule sets for Surge. Keep proxy subscriptions, API keys, controller
+addresses, LAN addresses, and device information out of this repo.
 
-Surge usage:
+The top-level files are local overlays. The `ACL4SSR/` directory mirrors the
+upstream ACL4SSR rule files currently used by the local Surge profiles, so Mac
+and iOS can load rule content from this repository.
+
+Overlay usage:
 
 ```ini
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/AI.list,💬 Ai平台,update-interval=3600
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/YouTube.list,📹 油管视频,update-interval=3600
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/BattleNetCN.list,🎯 全球直连,update-interval=3600
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TikTokOverlay.list,🎵 TikTok,update-interval=3600
 ```
 
-Place these `RULE-SET` lines before broad ACL4SSR rule sets so local overlays
-take priority.
+Place overlay `RULE-SET` lines before broad mirrored ACL4SSR rule sets so local
+overrides take priority.
