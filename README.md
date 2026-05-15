@@ -14,13 +14,21 @@ and commits changes only when the mirrored files differ from upstream.
 Overlay usage:
 
 ```ini
+🎬 TerminusEmby = select,DIRECT,🇭🇰 香港节点,🇸🇬 狮城节点,🇺🇲 美国节点,🚀 节点选择,♻️ 自动选择,🚀 手动切换
+
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/AI.list,💬 Ai平台,update-interval=3600
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/YouTube.list,📹 油管视频,update-interval=3600
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TerminusEmbyDirect.list,DIRECT,update-interval=3600
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TerminusEmby.list,🎬 TerminusEmby,update-interval=3600
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/BattleNetCN.list,🎯 全球直连,update-interval=3600
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TikTokOverlay.list,🎵 TikTok,update-interval=3600
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TerminusEmby.list,🇸🇬 狮城节点,update-interval=3600
 ```
 
 Place overlay `RULE-SET` lines before broad mirrored ACL4SSR rule sets so local
 overrides take priority.
+
+Terminus+ notes:
+
+- Prefer `7056789.xyz` with HTTPS 443.
+- Keep `🎬 TerminusEmby` on `DIRECT` unless the direct path degrades.
+- `c3.bjdekk.cn` is intentionally not included because it was unavailable in local tests.

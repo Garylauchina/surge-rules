@@ -1,4 +1,4 @@
-# Terminus+ Emby test overlay.
+# Terminus+ Emby overlay. Use with a local policy group; DIRECT is preferred for CF entries.
 DOMAIN-SUFFIX,c2.zdz.plus
 DOMAIN-SUFFIX,7056789.xyz
 DOMAIN-SUFFIX,8056789.xyz
