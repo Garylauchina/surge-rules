@@ -16,9 +16,10 @@ Overlay usage:
 ```ini
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/AI.list,💬 Ai平台,update-interval=3600
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/YouTube.list,📹 油管视频,update-interval=3600
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TerminusEmbyDirect.list,DIRECT,update-interval=3600
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/BattleNetCN.list,🎯 全球直连,update-interval=3600
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TikTokOverlay.list,🎵 TikTok,update-interval=3600
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TerminusEmby.list,🇺🇲 美国节点,update-interval=3600
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TerminusEmby.list,🇸🇬 狮城节点,update-interval=3600
 ```
 
 Place overlay `RULE-SET` lines before broad mirrored ACL4SSR rule sets so local

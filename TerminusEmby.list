@@ -1,3 +1,2 @@
 # Terminus+ Emby test overlay.
-# Only c2 is enabled for Apple TV testing.
 DOMAIN-SUFFIX,c2.zdz.plus
