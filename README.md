@@ -14,7 +14,8 @@ and commits changes only when the mirrored files differ from upstream.
 Overlay usage:
 
 ```ini
-🎬 TerminusEmby = select,DIRECT,🇭🇰 香港节点,🇸🇬 狮城节点,🇺🇲 美国节点,🚀 节点选择,♻️ 自动选择,🚀 手动切换
+🚀 节点选择 = select,🇸🇬🇺🇲 新美节点,♻️ 自动选择,🔯 故障转移,🔮 负载均衡,🇨🇳 台湾节点,🇸🇬 狮城节点,🇯🇵 日本节点,🇺🇲 美国节点,🚀 手动切换,DIRECT
+🎬 TerminusEmby = select,DIRECT,🇸🇬 狮城节点,🇺🇲 美国节点,🚀 节点选择,♻️ 自动选择,🚀 手动切换
 
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/AI.list,💬 Ai平台,update-interval=3600
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/YouTube.list,📹 油管视频,update-interval=3600
@@ -26,6 +27,12 @@ RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TikTokO
 
 Place overlay `RULE-SET` lines before broad mirrored ACL4SSR rule sets so local
 overrides take priority.
+
+Policy notes:
+
+- `🇸🇬🇺🇲 新美节点` is the preferred main proxy channel.
+- Hong Kong policy groups and Hong Kong nodes are intentionally excluded from local profiles.
+- Keep subscription regex filters excluding Hong Kong node names so Hong Kong nodes do not re-enter auto, fallback, load-balance, or manual groups.
 
 Terminus+ notes:
 
