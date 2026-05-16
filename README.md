@@ -7,6 +7,10 @@ The top-level files are local overlays. The `ACL4SSR/` directory mirrors the
 upstream ACL4SSR rule files currently used by the local Surge profiles, so Mac
 and iOS can load rule content from this repository.
 
+`SharedRules.dconf` is the shared hosted `[Rule]` layer used by Mac, iOS, and
+router profiles. Device-specific settings and proxy subscription wiring stay in
+the local profile; only the rule order is centralized here.
+
 `scripts/sync-acl4ssr.sh` mirrors the upstream ACL4SSR files listed in the
 current Surge profiles. GitHub Actions runs it every day at 04:15 Asia/Shanghai
 and commits changes only when the mirrored files differ from upstream.
@@ -27,6 +31,13 @@ RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TikTokO
 
 Place overlay `RULE-SET` lines before broad mirrored ACL4SSR rule sets so local
 overrides take priority.
+
+Profiles can also load the shared rule layer directly:
+
+```ini
+[Rule]
+#!include https://raw.githubusercontent.com/Garylauchina/surge-rules/main/SharedRules.dconf
+```
 
 Policy notes:
 
