@@ -41,4 +41,5 @@ RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/ChinaCompanyIp.list,🎯 全球直连,update-interval=86400
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Download.list,🎯 全球直连,update-interval=86400
 
+GEOIP,CN,🎯 全球直连
 FINAL,🐟 漏网之鱼
