@@ -1,6 +1,6 @@
 # Home Network Overview
 
-Last verified: 2026-05-19
+Last verified: 2026-05-21
 
 This document records the current home-network operating model so future maintenance does not need the topology explained from scratch. Keep credentials, proxy subscription URLs, API tokens, controller secrets, and full hosted object names out of this file.
 
@@ -81,7 +81,10 @@ The bucket currently carries three hosted profile types:
 
 Current operating status:
 
-- Active: Cloudflare-hosted R4S profile.
+- Transition target: Cloudflare-hosted R4S profile.
+- Current R4S state: subscription URL is configured, but OpenClash automatic
+  config update is disabled and the router still uses the local cached source
+  profile at `/etc/openclash/config/r2s-surge.yaml`.
 - Active: Cloudflare-hosted iOS phone outside-home profile.
 - Standby: Mac/Surge profile. Keep it available as a fallback path, but it is not the primary operating path right now.
 
@@ -109,6 +112,9 @@ Observed consistency on 2026-05-19:
 - The iOS hosted profile `[Rule]` section matched `SharedRules.dconf` exactly.
 - The Mac hosted profile `[Rule]` section matched `SharedRules.dconf` exactly.
 - The R4S OpenClash profile referenced the same set of GitHub rule URLs as `SharedRules.dconf`.
+- On 2026-05-21, the R4S local source profile hash differed from the
+  R2-hosted R4S profile hash. Treat R2 as the transition target for R4S until a
+  manual staged update has been verified.
 
 ## Operational Intent
 
@@ -176,3 +182,6 @@ git clone https://github.com/Garylauchina/surge-rules.git
 - Keep Hong Kong policy groups/nodes excluded unless the local routing policy changes.
 - Keep `SharedRules.dconf` as the source of truth for shared rule ordering.
 - If a rule behaves differently across clients, compare the generated hosted profile against `SharedRules.dconf` before changing individual device configs.
+- For R4S, do not enable automatic config updates until the R2-hosted profile has
+  been staged locally, syntax-tested, backed up, restarted, and verified during a
+  quiet window.
