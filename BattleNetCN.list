@@ -5,3 +5,9 @@ DOMAIN-SUFFIX,blizzard.com
 DOMAIN-SUFFIX,blizzard.cn
 DOMAIN-SUFFIX,blizzardgames.cn
 DOMAIN-SUFFIX,blzstatic.cn
+
+# Diablo IV China resource CDN
+DOMAIN-SUFFIX,leihuo.netease.com
+DOMAIN-SUFFIX,necdn.leihuo.netease.com
+DOMAIN-SUFFIX,163jiasu.com
+DOMAIN-SUFFIX,ctlcdn.cn
