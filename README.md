@@ -1,227 +1,93 @@
 # Surge Rules
 
-Read this first when maintaining the home routing rules. This repository is the
-public-safe rule source for the home Surge/OpenClash profiles; keep proxy
-subscriptions, API tokens, controller secrets, dashboard passwords, generated
-R2 object keys, and private device credentials out of git.
+Read this first when maintaining the home proxy rules. This repository is the
+public-safe source for shared rule intent and maintenance notes. Do not commit
+proxy subscriptions, API tokens, controller secrets, dashboard passwords,
+generated R2 object keys, or private device credentials.
 
-## Architecture Overview
+## Architecture
 
-This proxy system has one rule source, one hosted configuration distribution
-layer, and two active clients:
+The proxy system has one public rule source, one hosted configuration delivery
+layer, and two active clients.
 
 ```text
 GitHub: Garylauchina/surge-rules
-  Public-safe rule sets, shared rule order, and maintenance notes
-  Source of truth for rule changes and fake-ip compatibility entries
+  Public-safe rule sets, shared rule order, fake-ip compatibility notes,
+  and operational documentation.
 
         ->
 
 Cloudflare R2: surge-configs
-  Hosts generated full profile files behind stable update URLs
-  Distribution layer only; do not treat hosted files as the long-term source
+  Hosts generated full client profiles behind update URLs.
+  This solves client-side config fetching; it is not the source of truth.
 
         ->
 
-Home: R4S OpenClash side gateway
-  Used while on the home LAN
-  Handles gateway, DNS, fake-ip, transparent proxy, and policy routing for LAN clients
+Home client: R4S OpenClash side gateway
+  Used on the home LAN.
+  Provides gateway, DNS, fake-ip, transparent proxy, and policy routing.
 
-Away: iPhone Surge profile
-  Used when the phone is outside home
-  Consumes a Cloudflare-hosted Surge profile URL and reuses the same rule logic
+Away client: iPhone Surge
+  Used when the phone is outside home.
+  Pulls its hosted Surge profile URL from Cloudflare R2.
 ```
 
-The important mental model:
+The key rule: GitHub stores public rules and docs; R2 stores generated full
+profiles for clients to fetch. Keep private subscriptions and node parameters in
+local private templates or client-side configuration sources, not in this repo.
 
-- GitHub is the rule and documentation source of truth.
-- Cloudflare R2 serves complete generated profiles by URL.
-- R4S OpenClash is the home gateway consumer. As of 2026-05-21, the R4S has an
-  R2 subscription URL configured, but automatic config update is disabled and
-  the running source is still the local cached OpenClash config file.
-- iPhone Surge is the outside-home consumer.
-- R4S and iPhone should share the same rule intent through `SharedRules.dconf`,
-  but device-specific proxy subscriptions, secrets, and generated profiles stay
-  out of this public repository.
-- Temporary router-side fixes are allowed for diagnosis, but successful fixes
-  must be copied back here and into the hosted R2 profile.
+## Maintenance Flow
 
-## Current Home Network
-
-Normal LAN clients get DHCP from the main router, but use the R4S as both
-gateway and DNS.
+Most routine work should follow this model:
 
 ```text
-LAN clients
-  DHCP server: main router
-  DHCP-provided gateway: R4S
-  DHCP-provided DNS: R4S
-
-        ->
-
-FriendlyElec R4S side router
-  iStoreOS + OpenClash / Mihomo
-  DNS interception, fake-ip, transparent proxy, and policy routing
-
-        ->
-
-Main router
-  DHCP authority and real upstream Internet path
+Change public rule intent
+  -> edit GitHub rule files or SharedRules.dconf
+  -> regenerate or update the full profile
+  -> publish the full profile to Cloudflare R2
+  -> clients update from their R2 URLs
 ```
 
-Important local roles:
+Use this decision table:
 
-- Main router: `192.168.0.1`
-- R4S side router: `192.168.0.4`
-- R4S runtime profile: `/etc/openclash/r2s-surge.yaml`
-- R4S mode: OpenClash rule mode with fake-ip DNS behavior
-- LAN DNS entry point: R4S dnsmasq, forwarding into OpenClash DNS
-- Fake-IP range: `198.18.0.0/16`
+- Change a public routing rule: edit this repository.
+- Change shared rule order: edit `SharedRules.dconf`.
+- Change fake-ip compatibility behavior: edit `OpenClashFakeIPFilter.list`, then
+  copy the same entries into the R4S hosted OpenClash profile on R2.
+- Change a complete client profile behavior that is not public-safe source:
+  update the generated profile on R2.
+- Change subscriptions, nodes, passwords, or private parameters: edit the local
+  private template/source, regenerate the full profile, and upload it to R2.
+- Diagnose a live issue: temporary R4S-side edits are fine, but successful fixes
+  must be written back to this repo and/or the R2 profile.
 
-OpenClash ports observed on the R4S:
+After R4S fully moves to R2 distribution, normal day-to-day maintenance should
+usually be only:
 
-- HTTP proxy: `7890`
-- SOCKS proxy: `7891`
-- redir: `7892`
-- mixed: `7893`
-- TPROXY: `7895`
-- DNS: `7874`
-- controller/dashboard: `9090`
+- edit GitHub public rules, or
+- update the appropriate full profile on R2,
 
-Do not move DHCP authority from the main router or enable R4S DHCP unless the
-network is being deliberately redesigned.
+then wait for R4S OpenClash and iPhone Surge to update from their URLs. Only
+subscription or private-node changes should require touching private templates.
 
-## Hosted Profiles
+## Current R4S Status
 
-Cloudflare R2 bucket: `surge-configs`
+Verified on 2026-05-21:
 
-Public profile host:
+- R4S address: `192.168.0.4`.
+- R4S OpenClash runtime file: `/etc/openclash/r2s-surge.yaml`.
+- R4S source profile path: `/etc/openclash/config/r2s-surge.yaml`.
+- R4S has a subscription named `r2s-surge` pointed at the public R2 host.
+- `auto_update=0`, so R4S is not yet automatically pulling R2 updates.
+- The R4S local source profile differs from the current R2-hosted R4S profile.
+- The running OpenClash file is locally generated, with custom fake-ip filters
+  merged in.
 
-- `https://surge.prometheusclothing.net/`
+So R4S is prepared for R2 distribution, but it is still effectively running
+from a local cached source profile. Treat the R2-hosted R4S profile as the
+transition target until a staged update is completed and verified.
 
-The bucket carries three profile types:
-
-- R4S OpenClash profile: hosted transition target
-- iOS Surge home/away profile: active
-- Mac Surge router profile: standby fallback
-
-Hosted profiles should be generated from the same rule order as
-`SharedRules.dconf`. Do not commit full generated R2 object names if they contain
-private identifiers; keep those in local notes or operational commands only.
-
-Current R4S state verified on 2026-05-21:
-
-- OpenClash has a subscription named `r2s-surge` pointing at the public R2 host.
-- `openclash.config.config_path` points to `/etc/openclash/config/r2s-surge.yaml`.
-- `auto_update=0`, so the R4S is not yet automatically pulling R2 updates.
-- The local source file differs from the current R2-hosted R4S profile.
-- The running file `/etc/openclash/r2s-surge.yaml` is OpenClash's generated
-  runtime config, with local custom fake-ip filters merged in.
-
-So the R4S is prepared for R2 distribution, but it should be treated as still
-running from a local cached profile until the local source file is deliberately
-updated from R2 and verified.
-
-## Repository Model
-
-- `SharedRules.dconf` is the shared `[Rule]` source for Mac, iOS, and router
-  profiles.
-- Top-level `.list` files are local overlays and should appear before broad
-  mirrored ACL4SSR rules.
-- `ACL4SSR/` mirrors upstream ACL4SSR rule files used by local profiles.
-- `scripts/sync-acl4ssr.sh` refreshes mirrored ACL4SSR files.
-- `.github/workflows/sync-acl4ssr.yml` runs the mirror sync daily at 04:15
-  Asia/Shanghai.
-- `OpenClashFakeIPFilter.list` records router-side fake-ip compatibility
-  filters that should also be copied into the R4S hosted OpenClash profile's
-  `dns.fake-ip-filter` list.
-
-Rule changes start in this repository, then are reflected into generated or
-hosted profiles. If behavior differs across clients, compare the generated
-profile against `SharedRules.dconf` before changing individual device configs.
-
-## Recent Compatibility Notes
-
-Diablo IV China resources need real DNS answers for the NetEase Leihuo CDN.
-The working fake-ip filter set is:
-
-```text
-+.leihuo.netease.com
-+.necdn.leihuo.netease.com
-+.163jiasu.com
-+.ctlcdn.cn
-```
-
-These entries are DNS compatibility filters, not traffic routing rules. Keep
-them in `OpenClashFakeIPFilter.list` and in the R4S hosted profile's
-`dns.fake-ip-filter`. The matching direct routing overlay lives in
-`BattleNetCN.list`.
-
-Do not broaden this to `+.netease.com` unless a real failure requires it.
-
-## Overlay Usage
-
-Example policy groups and overlay rules:
-
-```ini
-🚀 节点选择 = select,🇸🇬🇺🇲 新美节点,♻️ 自动选择,🔯 故障转移,🔮 负载均衡,🇨🇳 台湾节点,🇸🇬 狮城节点,🇯🇵 日本节点,🇺🇲 美国节点,🚀 手动切换,DIRECT
-🎬 TerminusEmby = select,DIRECT,🇸🇬 狮城节点,🇺🇲 美国节点,🚀 节点选择,♻️ 自动选择,🚀 手动切换
-
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/AI.list,💬 Ai平台,update-interval=3600
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/YouTube.list,📹 油管视频,update-interval=3600
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TerminusEmbyDirect.list,DIRECT,update-interval=3600
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TerminusEmby.list,🎬 TerminusEmby,update-interval=3600
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/BattleNetCN.list,🎯 全球直连,update-interval=3600
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TikTokOverlay.list,🎵 TikTok,update-interval=3600
-```
-
-Place local overlay `RULE-SET` lines before broad mirrored ACL4SSR rule sets so
-local overrides take priority.
-
-## Quick Checks
-
-From a Mac on the LAN:
-
-```sh
-route -n get default
-scutil --dns
-ping 192.168.0.1
-ping 192.168.0.4
-curl -I http://192.168.0.1
-```
-
-Expected shape:
-
-- Default gateway is the R4S.
-- DNS server is the R4S.
-- Main router and R4S are both reachable.
-
-From the R4S:
-
-```sh
-ip route
-uci show network
-uci show dhcp
-uci show openclash
-ps w | grep -Ei 'openclash|clash|mihomo|dnsmasq'
-tail -n 80 /tmp/openclash.log
-```
-
-Expected shape:
-
-- R4S default route goes through the main router.
-- R4S DHCP on LAN remains ignored or disabled.
-- OpenClash and dnsmasq are running.
-- OpenClash logs show direct, proxy, and reject policy hits.
-
-For Cloudflare R2:
-
-```sh
-wrangler whoami
-wrangler r2 bucket info surge-configs
-```
-
-To confirm whether R4S has fully moved to R2 distribution:
+To check whether R4S has fully moved to R2 distribution:
 
 ```sh
 uci get openclash.config.config_path
@@ -234,51 +100,111 @@ Compare the local source profile hash with the current R2-hosted profile. If
 they differ, R4S is still on a local cached source even if the subscription URL
 is configured.
 
-For GitHub rules:
+## R4S R2 Transition Plan
 
-```sh
-git clone https://github.com/Garylauchina/surge-rules.git
-```
-
-## Maintenance Policy
-
-- Keep `SharedRules.dconf` as the source of truth for rule order.
-- Keep R4S and iOS hosted configs active.
-- Keep Mac/Surge hosted config as standby.
-- Keep Hong Kong policy groups and Hong Kong nodes excluded unless the routing
-  policy changes.
-- Keep subscription regex filters excluding Hong Kong node names.
-- Keep fake-ip compatibility filters narrow and documented in
-  `OpenClashFakeIPFilter.list`.
-- When editing hosted R4S DNS behavior, update both this repository and the R2
-  hosted OpenClash profile.
-- Do not enable R4S automatic config updates until one manual R2 update has
-  been staged, tested, and verified.
-
-## Smooth R4S R2 Transition Plan
-
-Move R4S to R2 distribution in two phases:
+Move R4S to R2 distribution in two phases.
 
 1. Stage and verify manually.
    - Back up `/etc/openclash/config/r2s-surge.yaml`,
      `/etc/openclash/r2s-surge.yaml`, and `/etc/config/openclash`.
    - Download the R2-hosted R4S profile to a temporary file on the R4S.
    - Syntax-test the temporary profile with the OpenClash/Mihomo core.
-   - Confirm the temporary profile contains required fake-ip filters, especially
-     the Diablo IV Leihuo CDN entries.
-   - Replace `/etc/openclash/config/r2s-surge.yaml` only after the staged file
-     passes validation.
-   - Restart OpenClash during a quiet window and verify DNS, routing logs, and
-     the game/resource-loading behavior.
+   - Confirm required fake-ip filters are present.
+   - Replace `/etc/openclash/config/r2s-surge.yaml` only after validation.
+   - Restart OpenClash during a quiet window.
+   - Verify DNS behavior, OpenClash logs, normal browsing, and game/resource
+     loading.
 
 2. Enable automation after stability.
-   - Keep `custom_fakeip_filter=1` during the first successful R2-backed run so
-     local compatibility entries remain in force.
-   - After a day or two of stable behavior, enable OpenClash config auto-update
-     at an off-hours time.
+   - Keep `custom_fakeip_filter=1` during the first successful R2-backed run.
+   - After a stable day or two, enable OpenClash config auto-update at an
+     off-hours time.
    - If anything breaks, restore the backed-up local source profile and restart
      OpenClash.
 
-More detailed topology notes live in `docs/home-network-overview.md`, but this
-README should be enough to resume normal maintenance without rereading that file
-first.
+## Repository Files
+
+- `SharedRules.dconf`: shared rule order for Mac, iOS, and router profiles.
+- Top-level `.list` files: local public-safe rule overlays.
+- `ACL4SSR/`: mirrored upstream ACL4SSR rule files used by local profiles.
+- `OpenClashFakeIPFilter.list`: public-safe fake-ip compatibility entries that
+  must also be reflected in the R4S hosted profile.
+- `scripts/sync-acl4ssr.sh`: refreshes mirrored ACL4SSR files.
+- `.github/workflows/sync-acl4ssr.yml`: daily ACL4SSR mirror sync at 04:15
+  Asia/Shanghai.
+- `docs/home-network-overview.md`: more detailed network topology notes.
+
+## Network Summary
+
+Home LAN clients get DHCP from the main router, but use the R4S as gateway and
+DNS.
+
+- Main router: `192.168.0.1`
+- R4S side router: `192.168.0.4`
+- R4S DNS entry point: dnsmasq forwarding into OpenClash DNS
+- OpenClash DNS port: `7874`
+- OpenClash controller port: `9090`
+- Fake-IP range: `198.18.0.0/16`
+
+Do not move DHCP authority from the main router or enable R4S DHCP unless the
+network is being deliberately redesigned.
+
+## Compatibility Notes
+
+Diablo IV China resources need real DNS answers for the NetEase Leihuo CDN. The
+current working fake-ip filter entries are:
+
+```text
++.leihuo.netease.com
++.necdn.leihuo.netease.com
++.163jiasu.com
++.ctlcdn.cn
+```
+
+These are DNS compatibility entries, not ordinary routing rules. Keep them in
+`OpenClashFakeIPFilter.list` and in the R4S hosted profile's
+`dns.fake-ip-filter`. The matching direct-routing overlay lives in
+`BattleNetCN.list`.
+
+Do not broaden this to `+.netease.com` unless a real failure requires it.
+
+## Quick Checks
+
+From a Mac on the LAN:
+
+```sh
+route -n get default
+scutil --dns
+ping 192.168.0.1
+ping 192.168.0.4
+```
+
+From the R4S:
+
+```sh
+ip route
+uci show network
+uci show dhcp
+uci show openclash
+ps w | grep -Ei 'openclash|clash|mihomo|dnsmasq'
+tail -n 80 /tmp/openclash.log
+```
+
+For Cloudflare R2:
+
+```sh
+wrangler whoami
+wrangler r2 bucket info surge-configs
+```
+
+## Maintenance Rules
+
+- Keep `SharedRules.dconf` as the source of truth for public shared rule order.
+- Keep R2 as the full-profile delivery channel for clients.
+- Keep private subscriptions and generated full profiles out of this public
+  repository.
+- Keep R4S and iPhone Surge aligned in rule intent.
+- Keep Mac/Surge hosted config as standby.
+- Keep Hong Kong policy groups and Hong Kong nodes excluded unless the routing
+  policy changes.
+- Keep fake-ip compatibility filters narrow and documented.
