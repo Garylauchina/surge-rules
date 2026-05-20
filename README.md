@@ -5,6 +5,45 @@ public-safe rule source for the home Surge/OpenClash profiles; keep proxy
 subscriptions, API tokens, controller secrets, dashboard passwords, generated
 R2 object keys, and private device credentials out of git.
 
+## Architecture Overview
+
+This proxy system has one rule source, one hosted configuration distribution
+layer, and two active clients:
+
+```text
+GitHub: Garylauchina/surge-rules
+  Public-safe rule sets, shared rule order, and maintenance notes
+  Source of truth for rule changes and fake-ip compatibility entries
+
+        ->
+
+Cloudflare R2: surge-configs
+  Hosts generated full profile files behind stable update URLs
+  Distribution layer only; do not treat hosted files as the long-term source
+
+        ->
+
+Home: R4S OpenClash side gateway
+  Used while on the home LAN
+  Handles gateway, DNS, fake-ip, transparent proxy, and policy routing for LAN clients
+
+Away: iPhone Surge profile
+  Used when the phone is outside home
+  Consumes a Cloudflare-hosted Surge profile URL and reuses the same rule logic
+```
+
+The important mental model:
+
+- GitHub is the rule and documentation source of truth.
+- Cloudflare R2 serves complete generated profiles by URL.
+- R4S OpenClash is the home gateway consumer.
+- iPhone Surge is the outside-home consumer.
+- R4S and iPhone should share the same rule intent through `SharedRules.dconf`,
+  but device-specific proxy subscriptions, secrets, and generated profiles stay
+  out of this public repository.
+- Temporary router-side fixes are allowed for diagnosis, but successful fixes
+  must be copied back here and into the hosted R2 profile.
+
 ## Current Home Network
 
 Normal LAN clients get DHCP from the main router, but use the R4S as both
