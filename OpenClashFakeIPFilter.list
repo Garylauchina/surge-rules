@@ -1,0 +1,8 @@
+# OpenClash fake-ip compatibility filters.
+# Keep entries narrow: these domains should receive real DNS answers instead of 198.18.0.0/16 fake IPs.
+
+# Diablo IV / NetEase Leihuo CDN resource loader
++.leihuo.netease.com
++.necdn.leihuo.netease.com
++.163jiasu.com
++.ctlcdn.cn
