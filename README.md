@@ -11,6 +11,11 @@ and iOS can load rule content from this repository.
 router profiles aligned. Device-specific settings and proxy subscription wiring
 stay in the local profile; only the rule order is centralized here.
 
+`OpenClashFakeIPFilter.list` records router-side OpenClash fake-ip compatibility
+filters that should be copied into the R4S hosted OpenClash profile's
+`dns.fake-ip-filter` list. These entries are DNS behavior, not traffic routing
+rules, so they are intentionally separate from `SharedRules.dconf`.
+
 `scripts/sync-acl4ssr.sh` mirrors the upstream ACL4SSR files listed in the
 current Surge profiles. GitHub Actions runs it every day at 04:15 Asia/Shanghai
 and commits changes only when the mirrored files differ from upstream.
