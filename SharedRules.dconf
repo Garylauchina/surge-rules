@@ -12,7 +12,7 @@ RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/UnBan.list,🎯 全球直连,update-interval=86400
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/BanAD.list,🛑 广告拦截,update-interval=86400
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/BanProgramAD.list,🍃 应用净化,update-interval=86400
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/GoogleFCM.list,📢 谷歌FCM,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/GoogleFCM.list,🚀 节点选择,update-interval=86400
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/GoogleCN.list,🎯 全球直连,update-interval=86400
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/SteamCN.list,🎯 全球直连,update-interval=86400
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Bing.list,Ⓜ️ 微软Bing,update-interval=86400
