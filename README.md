@@ -36,7 +36,9 @@ The important mental model:
 
 - GitHub is the rule and documentation source of truth.
 - Cloudflare R2 serves complete generated profiles by URL.
-- R4S OpenClash is the home gateway consumer.
+- R4S OpenClash is the home gateway consumer. As of 2026-05-21, the R4S has an
+  R2 subscription URL configured, but automatic config update is disabled and
+  the running source is still the local cached OpenClash config file.
 - iPhone Surge is the outside-home consumer.
 - R4S and iPhone should share the same rule intent through `SharedRules.dconf`,
   but device-specific proxy subscriptions, secrets, and generated profiles stay
@@ -99,13 +101,26 @@ Public profile host:
 
 The bucket carries three profile types:
 
-- R4S OpenClash profile: active
+- R4S OpenClash profile: hosted transition target
 - iOS Surge home/away profile: active
 - Mac Surge router profile: standby fallback
 
 Hosted profiles should be generated from the same rule order as
 `SharedRules.dconf`. Do not commit full generated R2 object names if they contain
 private identifiers; keep those in local notes or operational commands only.
+
+Current R4S state verified on 2026-05-21:
+
+- OpenClash has a subscription named `r2s-surge` pointing at the public R2 host.
+- `openclash.config.config_path` points to `/etc/openclash/config/r2s-surge.yaml`.
+- `auto_update=0`, so the R4S is not yet automatically pulling R2 updates.
+- The local source file differs from the current R2-hosted R4S profile.
+- The running file `/etc/openclash/r2s-surge.yaml` is OpenClash's generated
+  runtime config, with local custom fake-ip filters merged in.
+
+So the R4S is prepared for R2 distribution, but it should be treated as still
+running from a local cached profile until the local source file is deliberately
+updated from R2 and verified.
 
 ## Repository Model
 
@@ -206,6 +221,19 @@ wrangler whoami
 wrangler r2 bucket info surge-configs
 ```
 
+To confirm whether R4S has fully moved to R2 distribution:
+
+```sh
+uci get openclash.config.config_path
+uci get openclash.config.auto_update
+uci get openclash.@config_subscribe[0].enabled
+sha256sum /etc/openclash/config/r2s-surge.yaml
+```
+
+Compare the local source profile hash with the current R2-hosted profile. If
+they differ, R4S is still on a local cached source even if the subscription URL
+is configured.
+
 For GitHub rules:
 
 ```sh
@@ -224,6 +252,32 @@ git clone https://github.com/Garylauchina/surge-rules.git
   `OpenClashFakeIPFilter.list`.
 - When editing hosted R4S DNS behavior, update both this repository and the R2
   hosted OpenClash profile.
+- Do not enable R4S automatic config updates until one manual R2 update has
+  been staged, tested, and verified.
+
+## Smooth R4S R2 Transition Plan
+
+Move R4S to R2 distribution in two phases:
+
+1. Stage and verify manually.
+   - Back up `/etc/openclash/config/r2s-surge.yaml`,
+     `/etc/openclash/r2s-surge.yaml`, and `/etc/config/openclash`.
+   - Download the R2-hosted R4S profile to a temporary file on the R4S.
+   - Syntax-test the temporary profile with the OpenClash/Mihomo core.
+   - Confirm the temporary profile contains required fake-ip filters, especially
+     the Diablo IV Leihuo CDN entries.
+   - Replace `/etc/openclash/config/r2s-surge.yaml` only after the staged file
+     passes validation.
+   - Restart OpenClash during a quiet window and verify DNS, routing logs, and
+     the game/resource-loading behavior.
+
+2. Enable automation after stability.
+   - Keep `custom_fakeip_filter=1` during the first successful R2-backed run so
+     local compatibility entries remain in force.
+   - After a day or two of stable behavior, enable OpenClash config auto-update
+     at an off-hours time.
+   - If anything breaks, restore the backed-up local source profile and restart
+     OpenClash.
 
 More detailed topology notes live in `docs/home-network-overview.md`, but this
 README should be enough to resume normal maintenance without rereading that file
