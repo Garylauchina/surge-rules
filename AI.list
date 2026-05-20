@@ -1,4 +1,4 @@
-# Surge AI overlay rules. Public-safe: domains only, no proxy credentials.
+# Surge AI overlay rules. Public-safe: no proxy credentials.
 DOMAIN-SUFFIX,grok.com
 DOMAIN-SUFFIX,x.ai
 DOMAIN-SUFFIX,grok.x.com
