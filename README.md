@@ -177,6 +177,12 @@ service on the R4S. Keep `GoogleFCMProxyOverlay.list` before the ACL4SSR
 Google FCM and Google CN rules in `SharedRules.dconf`, so FCM uses the normal
 proxy path without modifying the mirrored ACL4SSR files.
 
+Apple and Microsoft direct groups need stable real-IP DNS answers. The R4S
+hosted profile keeps a `dns.nameserver-policy` for Apple and Microsoft domains,
+pointing them at domestic DNS resolvers. Without that policy, these direct
+groups may fall back to `dns.google` or `cloudflare-dns.com`, producing noisy
+`dns resolve failed` warnings before the traffic can dial.
+
 ## Quick Checks
 
 From a Mac on the LAN:
