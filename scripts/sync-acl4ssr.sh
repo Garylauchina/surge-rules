@@ -57,4 +57,20 @@ for file in "${files[@]}"; do
   echo "synced ${destination}"
 done
 
+google_cn_file="ACL4SSR/Clash/GoogleCN.list"
+google_cn_temporary="${google_cn_file}.tmp"
+grep -vE '^DOMAIN-SUFFIX,(alt[1-8]-)?mtalk\.google\.com$' "${google_cn_file}" > "${google_cn_temporary}"
+mv "${google_cn_temporary}" "${google_cn_file}"
+
+cat > "ACL4SSR/Clash/Ruleset/GoogleFCM.list" <<'RULES'
+# Google FCM local override
+#
+# The hosted R4S OpenClash profile currently maps GoogleFCM_list to a
+# DIRECT-first policy group. Direct mtalk.google.com egress times out on the
+# home network, so keep this provider intentionally no-op and let FCM domains
+# fall through to ProxyGFWlist's google.com rule.
+DOMAIN,google-fcm-disabled.invalid
+RULES
+
+echo "applied local Google FCM routing override"
 echo "Synced ${#files[@]} ACL4SSR files from ${base_url}"
