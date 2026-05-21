@@ -131,6 +131,8 @@ the hosted profile and stop using OpenClash's custom merge behavior.
 - `SharedRules.dconf`: shared rule order for Mac, iOS, and router profiles.
 - Top-level `.list` files: local public-safe rule overlays.
 - `ACL4SSR/`: mirrored upstream ACL4SSR rule files used by local profiles.
+- `GoogleFCMProxyOverlay.list`: local overlay that forces Google FCM traffic to
+  the proxy path before ACL4SSR's Google FCM and Google CN rules can match it.
 - `OpenClashFakeIPFilter.list`: public-safe fake-ip compatibility entries that
   must also be reflected in the R4S hosted profile.
 - `scripts/sync-acl4ssr.sh`: refreshes mirrored ACL4SSR files.
@@ -173,11 +175,9 @@ These are DNS compatibility entries, not ordinary routing rules. Keep them in
 Do not broaden this to `+.netease.com` unless a real failure requires it.
 
 Google FCM (`mtalk.google.com`) should not be treated as a China-direct Google
-service on the R4S. The R4S hosted profile currently maps `GoogleFCM_list` to a
-DIRECT-first policy group, so this repo keeps that provider intentionally
-no-op and removes `mtalk.google.com` from `GoogleCN.list`. That lets FCM fall
-through to `ProxyGFWlist` and use the normal proxy path. The ACL4SSR sync script
-reapplies this local override after each upstream mirror refresh.
+service on the R4S. Keep `GoogleFCMProxyOverlay.list` before the ACL4SSR
+Google FCM and Google CN rules in `SharedRules.dconf`, so FCM uses the normal
+proxy path without modifying the mirrored ACL4SSR files.
 
 ## Quick Checks
 
