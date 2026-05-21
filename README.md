@@ -172,6 +172,13 @@ These are DNS compatibility entries, not ordinary routing rules. Keep them in
 
 Do not broaden this to `+.netease.com` unless a real failure requires it.
 
+Google FCM (`mtalk.google.com`) should not be treated as a China-direct Google
+service on the R4S. The R4S hosted profile currently maps `GoogleFCM_list` to a
+DIRECT-first policy group, so this repo keeps that provider intentionally
+no-op and removes `mtalk.google.com` from `GoogleCN.list`. That lets FCM fall
+through to `ProxyGFWlist` and use the normal proxy path. The ACL4SSR sync script
+reapplies this local override after each upstream mirror refresh.
+
 ## Quick Checks
 
 From a Mac on the LAN:
