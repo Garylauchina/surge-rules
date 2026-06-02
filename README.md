@@ -214,7 +214,9 @@ the hosted profile and stop using OpenClash's custom merge behavior.
 
 ## Repository Files
 
-- `SharedRules.dconf`: shared rule order for Mac, iOS, and router profiles.
+- `SharedRules.dconf`: public shared rule intent promoted from the current
+  stable R4S profile. It is split into local overlay/routing-safeguard rules
+  and ACL4SSR mirror rules.
 - Top-level `.list` files: local public-safe rule overlays.
 - `ACL4SSR/`: mirrored upstream ACL4SSR rule files used by local profiles.
 - `GoogleFCMProxyOverlay.list`: local overlay that forces Google FCM traffic to

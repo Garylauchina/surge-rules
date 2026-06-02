@@ -111,16 +111,21 @@ Rules repository:
 
 Rule-source model:
 
-- `SharedRules.dconf` is the shared rule-order source for Mac, iOS, and router profiles.
+- `SharedRules.dconf` records the public shared rule intent promoted from the
+  current stable R4S profile. It is split into local overlays and ACL4SSR mirror
+  rules.
 - Top-level `.list` files are local overlays.
 - `ACL4SSR/` mirrors the upstream ACL4SSR rule files used by the local profiles.
 - GitHub Actions syncs mirrored ACL4SSR files daily at 04:15 Asia/Shanghai.
 
 Observed consistency and migration status:
 
-- The iOS hosted profile `[Rule]` section matched `SharedRules.dconf` exactly.
-- The Mac hosted profile `[Rule]` section matched `SharedRules.dconf` exactly.
-- The R4S OpenClash profile referenced the same set of GitHub rule URLs as `SharedRules.dconf`.
+- The R4S OpenClash profile references the same public rule URL set as
+  `SharedRules.dconf`; full private node/group details stay in the hosted R2
+  profile.
+- iOS and Mac hosted profiles should be compared against the same public rule
+  intent, but may not match `SharedRules.dconf` line-for-line while device-
+  specific profile generation remains separate.
 - On 2026-05-21, R4S was migrated to the R2-hosted source profile and OpenClash
   subscription auto-update was enabled.
 
@@ -190,8 +195,10 @@ git clone https://github.com/Garylauchina/surge-rules.git
 - Keep R4S and iOS hosted configs as the active Cloudflare profile pair.
 - Keep Mac/Surge profile as standby.
 - Keep Hong Kong policy groups/nodes excluded unless the local routing policy changes.
-- Keep `SharedRules.dconf` as the source of truth for shared rule ordering.
-- If a rule behaves differently across clients, compare the generated hosted profile against `SharedRules.dconf` before changing individual device configs.
+- Keep `SharedRules.dconf` as the public source of truth for shared rule intent:
+  local overlays first, ACL4SSR mirror rules second.
+- If a rule behaves differently across clients, compare the generated hosted
+  profile against `SharedRules.dconf` before changing individual device configs.
 - For R4S, automatic config updates are now enabled. Do not make long-term
   manual edits on the router; update GitHub public rules or the R2-hosted full
   profile instead.
