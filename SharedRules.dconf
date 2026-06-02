@@ -1,20 +1,60 @@
 [Rule]
-# Minimal shared rule layer for the US-focused two-subscription profile.
-# Device-specific [General], [Proxy], and [Proxy Group] sections remain local.
+# Shared public rule layer generated from the current stable R4S profile.
+# Keep this file public-safe: rule intent only, no proxy nodes or credentials.
 #
-# Intent:
-# - Direct traffic stays direct.
-# - Everything else goes to the profile's dynamic US proxy selector.
-# - Do not split proxy traffic by app or business unless a real issue requires it.
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/BattleNetCN.list,DIRECT,update-interval=3600
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/LocalAreaNetwork.list,DIRECT,update-interval=86400
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/UnBan.list,DIRECT,update-interval=86400
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/GoogleCN.list,DIRECT,update-interval=86400
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Microsoft.list,DIRECT,update-interval=86400
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Apple.list,DIRECT,update-interval=86400
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/ChinaDomain.list,DIRECT,update-interval=86400
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/ChinaCompanyIp.list,DIRECT,update-interval=86400
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Download.list,DIRECT,update-interval=86400
+# Section 1: local overlays and routing safeguards maintained in this repository.
+IP-CIDR,45.32.87.131/32,DIRECT,no-resolve
+DOMAIN-SUFFIX,ippure.com,🚀 节点选择
+DOMAIN-SUFFIX,999831.xyz,🚀 节点选择
+DOMAIN,api.ipify.org,🚀 节点选择
+DOMAIN,ipinfo.io,🚀 节点选择
+DOMAIN,ipapi.co,🚀 节点选择
+DOMAIN,myip.ipip.net,🚀 节点选择
+DOMAIN,stun.chat.bilibili.com,🚀 节点选择
+DOMAIN,stun.hitv.com,🚀 节点选择
+DOMAIN,stun.miwifi.com,🚀 节点选择
+DOMAIN,stun.cloudflare.com,🚀 节点选择
+DOMAIN,stun.l.google.com,🚀 节点选择
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/YouTube.list,📹 油管视频,update-interval=3600
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/AI.list,💬 Ai平台,update-interval=3600
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TerminusEmbyDirect.list,DIRECT,update-interval=3600
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TerminusEmby.list,🎬 TerminusEmby,update-interval=3600
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/BattleNetCN.list,🎯 全球直连,update-interval=3600
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TikTokOverlay.list,🎵 TikTok,update-interval=3600
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/GoogleFCMProxyOverlay.list,🚀 节点选择,update-interval=3600
 
+# Section 2: ACL4SSR mirror rules, kept separate from local overlays.
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/LocalAreaNetwork.list,🎯 全球直连,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/UnBan.list,🎯 全球直连,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/BanAD.list,🛑 广告拦截,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/BanProgramAD.list,🍃 应用净化,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/GoogleFCM.list,📢 谷歌FCM,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/GoogleCN.list,🎯 全球直连,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/SteamCN.list,🎯 全球直连,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Bing.list,Ⓜ️ 微软Bing,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/OneDrive.list,Ⓜ️ 微软云盘,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Microsoft.list,Ⓜ️ 微软服务,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Apple.list,🍎 苹果服务,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Telegram.list,📲 电报消息,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/AI.list,💬 Ai平台,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/OpenAi.list,💬 Ai平台,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/NetEaseMusic.list,🎶 网易音乐,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/Epic.list,🎮 游戏平台,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/Origin.list,🎮 游戏平台,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/Sony.list,🎮 游戏平台,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/Steam.list,🎮 游戏平台,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/Nintendo.list,🎮 游戏平台,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/TikTok.list,🎵 TikTok,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/YouTube.list,📹 油管视频,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/Netflix.list,🎥 奈飞视频,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/Bahamut.list,📺 巴哈姆特,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/BilibiliHMT.list,📺 哔哩哔哩,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Ruleset/Bilibili.list,📺 哔哩哔哩,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/ChinaMedia.list,🌏 国内媒体,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/ProxyMedia.list,🌍 国外媒体,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/ProxyGFWlist.list,🚀 节点选择,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/ChinaDomain.list,🎯 全球直连,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/ChinaCompanyIp.list,🎯 全球直连,update-interval=86400
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/ACL4SSR/Clash/Download.list,🎯 全球直连,update-interval=86400
 GEOIP,CN,DIRECT
-FINAL,🚀 节点选择
+FINAL,🐟 漏网之鱼
