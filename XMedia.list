@@ -1,0 +1,4 @@
+# X/Twitter media attachments.
+# Keep this narrow so main X web/API traffic continues to use the default proxy path.
+DOMAIN-SUFFIX,twimg.com
+DOMAIN,ton.twitter.com

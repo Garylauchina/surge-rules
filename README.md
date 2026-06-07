@@ -97,6 +97,7 @@ Current R4S policy selections, as verified through the OpenClash controller:
 - `🎮 游戏平台` -> `DIRECT`
 - `🎯 全球直连` -> `DIRECT`
 - `🍎 苹果服务` -> `DIRECT`
+- `Ⓜ️ 微软云盘` -> `🚀 节点选择`
 - `Ⓜ️ 微软服务` -> `DIRECT`
 
 Practical result:
@@ -274,6 +275,12 @@ hosted profile keeps a `dns.nameserver-policy` for Apple and Microsoft domains,
 pointing them at domestic DNS resolvers. Without that policy, these direct
 groups may fall back to `dns.google` or `cloudflare-dns.com`, producing noisy
 `dns resolve failed` warnings before the traffic can dial.
+
+OneDrive is the exception to the Microsoft direct baseline. On 2026-06-08,
+`onedrive.live.com` and `skyapi.onedrive.live.com` failed through `DIRECT`
+with refused or timed-out dials to Microsoft edge IPs, while the same domains
+worked through `🚀 节点选择`. Keep `Ⓜ️ 微软云盘` on the proxy path unless a
+fresh direct-path test proves otherwise.
 
 IPPure and similar leak-test endpoints should be forced through the normal proxy
 path when testing an exit node. Otherwise helper APIs such as `myip.ipip.net` or
