@@ -195,6 +195,14 @@ git clone https://github.com/Garylauchina/surge-rules.git
 - Keep R4S and iOS hosted configs as the active Cloudflare profile pair.
 - Keep Mac/Surge profile as standby.
 - Keep Hong Kong policy groups/nodes excluded unless the local routing policy changes.
+- Keep 悠兔 airport nodes out of active R4S/iOS/Mac paths. 红杏 is cold standby
+  only and should stay behind manual `select` groups, not `url-test`,
+  `fallback`, or load-balance groups.
+- Until a second private VPS is available, default daily external traffic to the
+  self-hosted Vultr path and use 红杏 only by deliberate manual selection.
+- The 2026-06-17 phase-1 simplification removed historical region, automatic
+  selection, fallback, and load-balancing groups from the active hosted
+  profiles. Keep future group additions minimal and tied to a live need.
 - Keep `SharedRules.dconf` as the public source of truth for shared rule intent:
   local overlays first, ACL4SSR mirror rules second.
 - If a rule behaves differently across clients, compare the generated hosted
