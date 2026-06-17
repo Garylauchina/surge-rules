@@ -89,19 +89,38 @@ Vultr LA VPS
   Kernel transport tuning: BBR enabled with fq qdisc.
 ```
 
-Current R4S policy selections, as verified through the OpenClash controller:
+Current R4S policy selections, as verified through the OpenClash controller on
+2026-06-17 after the phase-1 group simplification:
 
 - `🚀 节点选择` -> `自建 Vultr LA Reality`
 - `🐟 漏网之鱼` -> `自建 Vultr LA Reality`
-- `🇺🇲 美国节点` -> `自建 Vultr LA Reality`
-- `💬 Ai平台` -> `🇺🇲 美国节点`
-- `📹 油管视频` -> `🇺🇲 美国节点`
-- `🎥 奈飞视频` -> dedicated US streaming node selection
+- `💬 Ai平台` -> `自建 Vultr LA Reality`
+- `📹 油管视频` -> `自建 Vultr LA Reality`
+- `🐦 X媒体` -> `自建 Vultr LA Reality`
+- `🎥 奈飞视频` -> `自建 Vultr LA Reality`
 - `🎮 游戏平台` -> `DIRECT`
 - `🎯 全球直连` -> `DIRECT`
 - `🍎 苹果服务` -> `DIRECT`
 - `Ⓜ️ 微软云盘` -> `🚀 节点选择`
 - `Ⓜ️ 微软服务` -> `DIRECT`
+
+The active R4S profile now keeps only the minimal daily path groups plus
+service groups required by the rules. Historical region, automatic selection,
+fallback, and load-balancing groups have been removed from the live profile.
+
+Cold-standby hardening verified on 2026-06-17:
+
+- The second private VPS is not available yet; keep `自建 Vultr LA Reality` as
+  the only automatic/private daily exit for R4S.
+- Do not use 悠兔 airport nodes in R4S, iOS Surge, or Mac Surge active paths.
+  Do not place 悠兔 nodes in `url-test`, `fallback`, load-balance, AI, YouTube,
+  X media, Netflix, Telegram, or `🐟 漏网之鱼` groups.
+- 红杏 nodes are cold standby only. Keep them reachable only through manual
+  `select` groups such as `🧰 红杏备用` / `🧰 红杏备用新美`; do not use them in
+  automatic testing, fallback, or load-balancing paths.
+- Until the second private VPS is added, service groups should default to the
+  self-hosted Vultr path and expose 红杏 only as a deliberate manual emergency
+  choice.
 
 Practical result:
 
