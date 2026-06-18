@@ -1,25 +1,54 @@
 # Private Exit Policy
 
-Last verified: 2026-06-18
+Last verified: 2026-06-19
 
-The R4S profile currently has three self-hosted VPS endpoints:
+## Endpoint Roles
 
-- Vultr remains the automatic daily exit.
-- Bandwagon GIG-2 is available through the manual
-  `Bandwagon GIG-2 候选` group.
-- Within the Bandwagon group, Hysteria2 is preferred over Reality based on the
-  current peak-hour tests.
-- The Tokyo VPS is available through the manual `日本 VPS 候选` group.
-- Within the Tokyo group, Hysteria2 is the default and Trojan TLS is the TCP
-  alternative. The single sing-box service is intentionally used to keep
-  memory consumption low.
-- 红杏 remains manual cold standby and must not be placed in automatic testing,
-  fallback, or load-balancing groups.
-- 悠兔 remains excluded from active R4S, iOS, and Mac paths.
+| Endpoint | Monthly quota | Billing model | Role |
+| --- | ---: | --- | --- |
+| Vultr Los Angeles | 1 TB | Monthly | Primary daily and primary US exit |
+| BitsFlow Tokyo | 600 GB | Annual prepaid | Low-latency hot standby |
+| Bandwagon GIG-2 Los Angeles | 1 TB | Quarterly prepaid | Secondary US exit |
+| 红杏 | Metered | Usage based | Manual cold standby only |
+
+Vultr stays first because it has the best verified combination of throughput,
+stability, US egress location, and operational flexibility. Tokyo is second for
+general traffic because its latency and throughput are good, but its lower
+quota should not carry all household video by default. Bandwagon is retained as
+the second US route, but does not replace Vultr unless later tests improve.
+
+## Automatic Groups
+
+- `♻️ 私有主备`: Vultr first, Tokyo second, Bandwagon third.
+- `🇺🇸 美国主备`: Vultr first, Bandwagon second.
+- `🇯🇵 日本低延迟`: Tokyo Hysteria2 first, Tokyo TCP alternative second.
+- `🚀 节点选择`: manual entry point for the three automatic groups, individual
+  private paths, 红杏 cold standby, and `DIRECT`.
+
+Automatic groups use ordered fallback rather than load balancing. This keeps a
+stable egress IP for each service, preserves streaming regions and account risk
+controls, and avoids consuming several quotas unpredictably.
+
+## Service Mapping
+
+- US-specific: AI, Netflix, TikTok, and generic foreign media use
+  `🇺🇸 美国主备`.
+- General proxy traffic: YouTube, X, Telegram, Google FCM, OneDrive, Emby, and
+  final unmatched traffic use `♻️ 私有主备`.
+- Apple, Microsoft core services, games, and China services remain direct
+  unless a narrow verified exception requires proxying.
+
+## Client Differences
+
+The R4S uses Vultr Reality, Bandwagon Reality/Hysteria2, and Tokyo
+Trojan/Hysteria2. The iPhone Surge profile uses protocols supported by Surge:
+Vultr Trojan/Hysteria2, Bandwagon Hysteria2, and Tokyo Trojan/Hysteria2.
 
 All private VPS endpoint addresses must have explicit `DIRECT,no-resolve`
-rules before general proxy rules. This prevents a private proxy connection from
-being sent through another proxy endpoint.
+rules before general proxy rules. This prevents proxy recursion.
+
+红杏 must not appear in automatic testing, fallback, or load-balancing groups.
+悠兔 remains excluded from active R4S, iOS, and Mac paths.
 
 Private node credentials and complete generated profiles belong in Cloudflare
 R2 or private local sources, not in this repository.
