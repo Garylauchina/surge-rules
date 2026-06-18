@@ -15,6 +15,7 @@ DOMAIN,stun.hitv.com,🚀 节点选择
 DOMAIN,stun.miwifi.com,🚀 节点选择
 DOMAIN,stun.cloudflare.com,🚀 节点选择
 DOMAIN,stun.l.google.com,🚀 节点选择
+DOMAIN,pc.bjdmc.net,🎯 全球直连
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/YouTube.list,📹 油管视频,update-interval=3600
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/AI.list,💬 Ai平台,update-interval=3600
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TerminusEmbyDirect.list,DIRECT,update-interval=3600
