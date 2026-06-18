@@ -24,7 +24,7 @@ RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/Terminu
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TerminusEmby.list,🎬 TerminusEmby,update-interval=3600
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/BattleNetCN.list,🎯 全球直连,update-interval=3600
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/TikTokOverlay.list,🎵 TikTok,update-interval=3600
-RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/GoogleFCMProxyOverlay.list,🚀 节点选择,update-interval=3600
+RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/GoogleFCMProxyOverlay.list,♻️ 私有主备,update-interval=3600
 RULE-SET,https://raw.githubusercontent.com/Garylauchina/surge-rules/main/XMedia.list,🐦 X媒体,update-interval=3600
 
 # Section 2: ACL4SSR mirror rules, kept separate from local overlays.
