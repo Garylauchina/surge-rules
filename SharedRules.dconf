@@ -4,6 +4,7 @@
 #
 # Section 1: local overlays and routing safeguards maintained in this repository.
 IP-CIDR,45.32.87.131/32,DIRECT,no-resolve
+IP-CIDR,65.49.206.125/32,DIRECT,no-resolve
 DOMAIN-SUFFIX,ippure.com,🚀 节点选择
 DOMAIN-SUFFIX,999831.xyz,🚀 节点选择
 DOMAIN,api.ipify.org,🚀 节点选择
