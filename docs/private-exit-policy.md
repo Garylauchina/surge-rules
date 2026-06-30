@@ -1,25 +1,29 @@
 # Private Exit Policy
 
-Last verified: 2026-06-19
+Last verified: 2026-07-01
 
 ## Endpoint Roles
 
 | Endpoint | Monthly quota | Billing model | Role |
 | --- | ---: | --- | --- |
 | Vultr Los Angeles | 1 TB | Monthly | Primary daily and primary US exit |
-| BitsFlow Tokyo | 600 GB | Annual prepaid | Low-latency hot standby |
-| Bandwagon GIG-2 Los Angeles | 1 TB | Quarterly prepaid | Secondary US exit |
+| BitsFlow Tokyo | 600 GB | Annual prepaid | Low-latency manual/last fallback |
+| Bandwagon GIG-2 Los Angeles | 1 TB | Quarterly prepaid | Secondary daily and secondary US exit |
 | 红杏 | Metered | Usage based | Manual cold standby only |
 
 Vultr stays first because it has the best verified combination of throughput,
-stability, US egress location, and operational flexibility. Tokyo is second for
-general traffic because its latency and throughput are good, but its lower
-quota should not carry all household video by default. Bandwagon is retained as
-the second US route, but does not replace Vultr unless later tests improve.
+stability, US egress location, and operational flexibility. Bandwagon is second
+for general traffic and US traffic because its 1 TB quota is better suited to
+household video fallback. Tokyo is kept for low-latency manual use and last
+fallback because its 600 GB quota can be consumed quickly by video traffic.
+
+On 2026-07-01, BitsFlow reported 70% monthly quota usage before the
+2026-07-18 reset. Until the reset, Tokyo should not be used as an automatic
+high-probability fallback for large household traffic.
 
 ## Automatic Groups
 
-- `♻️ 私有主备`: Vultr first, Tokyo second, Bandwagon third.
+- `♻️ 私有主备`: Vultr first, Bandwagon second, Tokyo last.
 - `🇺🇸 美国主备`: Vultr first, Bandwagon second.
 - `🇯🇵 日本低延迟`: Tokyo Hysteria2 first, Tokyo TCP alternative second.
 - `🚀 节点选择`: manual entry point for the three automatic groups, individual
