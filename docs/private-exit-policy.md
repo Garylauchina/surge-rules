@@ -1,6 +1,6 @@
 # Private Exit Policy
 
-Last verified: 2026-07-01
+Last verified: 2026-07-23
 
 ## Endpoint Roles
 
@@ -17,14 +17,19 @@ for general traffic and US traffic because its 1 TB quota is better suited to
 household video fallback. Tokyo is kept for low-latency manual use and last
 fallback because its 600 GB quota can be consumed quickly by video traffic.
 
+After the 2026-07-23 Vultr service recovery, the R4S uses Vultr Hysteria2 on
+UDP 8443 as the first Vultr path and Vultr Trojan on TCP 8443 as the same-host
+fallback. The Vultr Reality listener remains available for manual diagnosis but
+is excluded from automatic groups while its OpenClash health check is failing.
+
 On 2026-07-01, BitsFlow reported 70% monthly quota usage before the
 2026-07-18 reset. Until the reset, Tokyo should not be used as an automatic
 high-probability fallback for large household traffic.
 
 ## Automatic Groups
 
-- `♻️ 私有主备`: Vultr first, Bandwagon second, Tokyo last.
-- `🇺🇸 美国主备`: Vultr first, Bandwagon second.
+- `♻️ 私有主备`: Vultr Hysteria2, Vultr Trojan, Bandwagon, then Tokyo.
+- `🇺🇸 美国主备`: Vultr Hysteria2, Vultr Trojan, then Bandwagon.
 - `🇯🇵 日本低延迟`: Tokyo Hysteria2 first, Tokyo TCP alternative second.
 - `🚀 节点选择`: manual entry point for the three automatic groups, individual
   private paths, 红杏 cold standby, and `DIRECT`.
@@ -44,9 +49,11 @@ controls, and avoids consuming several quotas unpredictably.
 
 ## Client Differences
 
-The R4S uses Vultr Reality, Bandwagon Reality/Hysteria2, and Tokyo
-Trojan/Hysteria2. The iPhone Surge profile uses protocols supported by Surge:
-Vultr Trojan/Hysteria2, Bandwagon Hysteria2, and Tokyo Trojan/Hysteria2.
+The R4S automatic groups use Vultr Hysteria2/Trojan, Bandwagon Hysteria2, and
+Tokyo Trojan/Hysteria2. Vultr and Bandwagon Reality nodes are retained only as
+manual diagnostic paths while their OpenClash health checks are failing. The
+iPhone Surge profile uses protocols supported by Surge: Vultr
+Trojan/Hysteria2, Bandwagon Hysteria2, and Tokyo Trojan/Hysteria2.
 
 All private VPS endpoint addresses must have explicit `DIRECT,no-resolve`
 rules before general proxy rules. This prevents proxy recursion.

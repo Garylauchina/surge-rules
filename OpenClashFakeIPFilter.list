@@ -9,3 +9,7 @@
 
 # Minecraft direct server
 pc.bjdmc.net
+
+# Steam login and account-recovery endpoints
++.steamserver.net
+steamconnecttest.com
