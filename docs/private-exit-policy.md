@@ -1,6 +1,6 @@
 # Private Exit Policy
 
-Last verified: 2026-07-23
+Last verified: 2026-07-24
 
 ## Endpoint Roles
 
@@ -19,8 +19,8 @@ fallback because its 600 GB quota can be consumed quickly by video traffic.
 
 After the 2026-07-23 Vultr service recovery, the R4S uses Vultr Hysteria2 on
 UDP 8443 as the first Vultr path and Vultr Trojan on TCP 8443 as the same-host
-fallback. The Vultr Reality listener remains available for manual diagnosis but
-is excluded from automatic groups while its OpenClash health check is failing.
+fallback. On 2026-07-24, the non-working Vultr and Bandwagon Reality services
+were retired and their TCP 443 listeners were closed.
 
 On 2026-07-01, BitsFlow reported 70% monthly quota usage before the
 2026-07-18 reset. Until the reset, Tokyo should not be used as an automatic
@@ -49,11 +49,10 @@ controls, and avoids consuming several quotas unpredictably.
 
 ## Client Differences
 
-The R4S automatic groups use Vultr Hysteria2/Trojan, Bandwagon Hysteria2, and
-Tokyo Trojan/Hysteria2. Vultr and Bandwagon Reality nodes are retained only as
-manual diagnostic paths while their OpenClash health checks are failing. The
-iPhone Surge profile uses protocols supported by Surge: Vultr
-Trojan/Hysteria2, Bandwagon Hysteria2, and Tokyo Trojan/Hysteria2.
+The R4S uses Vultr Hysteria2/Trojan, Bandwagon Hysteria2, and Tokyo
+Trojan/Hysteria2. Reality nodes are no longer present in the hosted profile.
+The iPhone Surge profile uses Vultr Trojan/Hysteria2, Bandwagon Hysteria2, and
+Tokyo Trojan/Hysteria2 and was unaffected by the Reality retirement.
 
 All private VPS endpoint addresses must have explicit `DIRECT,no-resolve`
 rules before general proxy rules. This prevents proxy recursion.
